@@ -12,18 +12,34 @@ import org.springframework.util.CollectionUtils;
 
 import com.coditas.Product;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class DataCacheUtil.
  */
 public class DataCacheUtil {
 	
+	/**
+	 * Instantiates a new data cache util.
+	 */
+	private DataCacheUtil() {}
+	
 	
 	/** The Constant LOG. */
 	protected static final Logger LOG = LoggerFactory.getLogger(DataCacheUtil.class);
 	
+	/** The max cache size. */
+	private static int  maxCacheSize = 3;
+	
 	/** The cache. */
-	private static ConcurrentHashMap<Long, Product> cache = new ConcurrentHashMap<>(3);
+	private static ConcurrentHashMap<Long, Product> cache = new ConcurrentHashMap<>(maxCacheSize);
+	
+	/**
+	 * Gets the max cache size.
+	 *
+	 * @return the max cache size
+	 */
+	public static int getMaxCacheSize() {
+		return maxCacheSize;
+	}
 	
 	/**
 	 * Gets the cache object.
@@ -153,4 +169,17 @@ public class DataCacheUtil {
     		Collections.sort(list, (p1,p2)->p2.getCreated().compareTo(p1.getCreated()));
     	}
     }
+    
+    /**
+     * Creates the cache.
+     *
+     * @param list the list
+     */
+    public static void createCache(List<Product> list){
+    	if(getSize()==0 && !CollectionUtils.isEmpty(list)) {
+    		Collections.sort(list, (p1,p2)->p2.getCreated().compareTo(p1.getCreated()));
+    		putAll(list.stream().limit(maxCacheSize).collect(Collectors.toList()));
+    	}
+    }
+    
 }

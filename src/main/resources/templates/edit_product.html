@@ -3,6 +3,9 @@
 	xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8" />
+<style>
+    .required:after { content:" *"; color:red; }
+</style>
 <title>Edit Product</title>
 </head>
 <body>
@@ -11,30 +14,36 @@
 		<br />
 		<form action="#" th:action="@{/save}" th:object="${product}"
 			method="post">
-
+		    <table border="0" cellpadding="10">
+		        <tbody>
+		            <tr th:each="error : ${errors}">
+		            	<td th:text="${error}" style="color:red">Errors:</td>
+		            </tr>
+		        </tbody>
+		    </table>
 			<table border="0" cellpadding="10">
 				<tr>				
-					<td>Product ID:</td>
+					<td class="required">Product ID:</td>
 					<td>
 						<input type="text" th:field="*{id}" readonly="readonly" />
 					</td>
 				</tr>			
 				<tr>				
-					<td>Product Name:</td>
+					<td class="required">Product Name:</td>
 					<td>
 						<input type="text" th:field="*{name}" />
 					</td>
 				</tr>
 				<tr>
-					<td>Brand:</td>
+					<td class="required">Brand:</td>
 					<td><input type="text" th:field="*{brand}" /></td>
 				</tr>
 				<tr>
-					<td>Made In:</td>
+					<td class="required">Made In:</td>
 					<td><input type="text" th:field="*{madein}" /></td>
 				</tr>
 				<tr>
-					<td>Price:</td>
+					<td class="required">Price:</td>
 					<td><input type="text" th:field="*{price}" /></td>
 				</tr>								
 				<tr>

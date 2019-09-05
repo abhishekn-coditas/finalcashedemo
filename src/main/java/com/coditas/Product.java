@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Product.
  */
@@ -30,7 +29,7 @@ public class Product {
 	private String madein;
 	
 	/** The price. */
-	private float price;
+	private Float price;
 	
 	private Date created;
 
@@ -137,7 +136,7 @@ public class Product {
 	 *
 	 * @return the price
 	 */
-	public float getPrice() {
+	public Float getPrice() {
 		return price;
 	}
 
@@ -146,7 +145,7 @@ public class Product {
 	 *
 	 * @param price the new price
 	 */
-	public void setPrice(float price) {
+	public void setPrice(Float price) {
 		this.price = price;
 	}
 

@@ -1,20 +1,22 @@
 package com.coditas;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-// TODO: Auto-generated Javadoc
+import com.coditas.validator.ProductServiceDataValidator;
+
 /**
  * The Class AppController.
  */
@@ -49,7 +51,6 @@ public class AppController {
 	public String showNewProductPage(Model model) {
 		Product product = new Product();
 		model.addAttribute("product", product);
-		
 		return "new_product";
 	}
 	
@@ -60,10 +61,22 @@ public class AppController {
 	 * @return the string
 	 */
 	@PostMapping(value = "/save")
-	public String saveProduct(@ModelAttribute("product") Product product) {
-		service.save(product);
-		
-		return "redirect:/";
+	public String saveProduct(@ModelAttribute("product") ProductDto productDto,Model model) {
+		List<String> errors = ProductServiceDataValidator.validateProductData(productDto);
+		if(!CollectionUtils.isEmpty(errors)) {
+			model.addAttribute("errors", errors);
+			return "new_product";
+		}
+		Product product = new Product();
+		BeanUtils.copyProperties(productDto, product);
+		Boolean result = service.save(product);
+		if(result) {
+			return "redirect:/";
+		}
+		else {
+			model.addAttribute("errors", new ArrayList<String>().add("Error occurred while saving record."));
+			return "new_product";
+		}
 	}
 	
 	/**

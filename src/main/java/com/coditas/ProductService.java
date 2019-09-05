@@ -3,6 +3,7 @@ package com.coditas;
 import java.util.List;
 import java.util.Optional;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class ProductService {
 	public List<Product> listAll() {
 		LOG.info("[ProductService] getting product list from db");
 		List<Product>list = repo.findAll();
+		DataCacheUtil.createCache(list);
 		LOG.info("[ProductService] list size : {}",list.size());
 		return list;
 	}
@@ -56,13 +58,21 @@ public class ProductService {
 	 *
 	 * @param product the product
 	 */
-	public void save(Product product) {
-		repo.save(product);
-		if(DataCacheUtil.getSize() > 2) {
+	public Boolean save(Product product) {
+		Boolean result = Boolean.TRUE;
+		try {
+			repo.save(product);
+		}
+		catch(Exception exception) {
+			result = Boolean.FALSE;
+			LOG.info("[ProductService] Exception Occurred : {} ",exception);
+		}
+		if(DataCacheUtil.getSize() > (DataCacheUtil.getMaxCacheSize()-1)) {
 			DataCacheUtil.removeLast();
 		}
 		DataCacheUtil.put(product.getId(), product);
 		LOG.info("[ProductService] saved product {} successfully.",product.getId());
+		return result;
 	}
 	
 	/**

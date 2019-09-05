@@ -20,7 +20,7 @@ public class ProductBuilder {
 		p.setBrand("Brand"+id);
 		p.setName("Product"+id);
 		p.setMadein("India");
-		p.setPrice(100);
+		p.setPrice(100F);
 		return p;
 	}
 
