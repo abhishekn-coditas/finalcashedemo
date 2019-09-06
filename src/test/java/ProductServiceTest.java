@@ -16,6 +16,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.coditas.Product;
 import com.coditas.ProductRepository;
 import com.coditas.ProductService;
+import com.coditas.util.DataCacheUtil;
 
 import databuilder.ProductBuilder;
 
@@ -31,7 +32,8 @@ public class ProductServiceTest {
 	@Test
 	public void testFindAllProducts() {
 		when(repository.findAll()).thenReturn(ProductBuilder.getProductList());
-		Assert.assertEquals("Product List size should be 2.",2,service.listAll().size());
+		assertNotNull("Product List should not be null",service.listAll());
+		assertNotNull("Cache should not be null",DataCacheUtil.getAll());
 	}
 	
 	@Test
@@ -45,13 +47,20 @@ public class ProductServiceTest {
 		Product product = ProductBuilder.createProduct(1L);
 		when(repository.save(any())).thenReturn(product);
 		service.save(product);
+		Assert.assertEquals("Element should be exist in cache", Boolean.TRUE, DataCacheUtil.isElementExists(1L));
 	}
 	
 	@Test
 	public void deleteProductById() {
-		service.delete(Mockito.anyLong());
+		service.delete(1L);
+		Assert.assertEquals("Element should not be exist in cache",Boolean.FALSE, DataCacheUtil.isElementExists((1L)));
 	}
 	
+	@Test
+	public void recentItemsListTest() {
+		service.flush();
+		Assert.assertEquals("Cache size should be 0 ",0, DataCacheUtil.getSize());
+	}	
 	
 
 }

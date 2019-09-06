@@ -11,6 +11,7 @@ public class ProductBuilder {
 		List<Product> list = new ArrayList<>();
 		list.add(createProduct(1L));
 		list.add(createProduct(2L));
+		list.add(createProduct(3L));
 		return list;
 	}
 	
